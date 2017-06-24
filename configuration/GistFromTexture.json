@@ -3,7 +3,7 @@
 		"flavor": "",
 		"hook": "",
 		"importance": "",
-		"localHookTemplate": "Configuration/GistFromTextureLocalHookTemplate.m",
+		"localHookTemplate": "configuration/GistFromTextureLocalHookTemplate.m",
 		"name": "GistFromTexture",
 		"pathPlacement": "none",
 		"subfolder": "",
@@ -11,5 +11,18 @@
 		"type": "git",
 		"update": "",
 		"url": ""
-	}	
+	},
+{
+		"flavor": "",
+		"hook": "",
+		"importance": "",
+		"localHookTemplate": "",
+		"name": "TextureAnalysis",
+		"pathPlacement": "append",
+		"subfolder": ["analysis",  "batch", "filters", "graphing", "gui", "indices", "misc", "preprocess", "save", "segment", "texture"],
+		"toolboxRoot": "projects/Analysis",
+		"type": "git",
+		"update": "",
+		"url": "https://github.com/ttesileanu/TextureAnalysis.git"
+	}		
 ]

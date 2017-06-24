@@ -3,7 +3,7 @@
 		"flavor": "",
 		"hook": "",
 		"importance": "",
-		"localHookTemplate": "Configuration/UPENNNaturalImageProjectLocalHookTemplate.m",
+		"localHookTemplate": "Configuration/GistFromTextureLocalHookTemplate.m",
 		"name": "GistFromTexture",
 		"pathPlacement": "none",
 		"subfolder": "",

@@ -13,7 +13,7 @@ function GistFromTextureLocalHook
 % You will need to edit the project prefs to point at the data on your
 % computer.
 
-% 6/24/17  dhb      Created.
+% 6/24/17  dhb      Created.  Removed reliance on BLTB GetComputerInfo.
 
 % Define project
 theProject = 'GistFromTexture';
@@ -21,14 +21,17 @@ theProject = 'GistFromTexture';
 %% Say hello
 fprintf('Running %s hook\n',theProject);
 
-
 %% Clear prefs
 if (ispref(theProject))
     rmpref(theProject);
 end
 
 %% Setup basedir with good guesses
-sysInfo = GetComputerInfo();
+% Get the local host name.
+[~, localHostName] = system('scutil --get LocalHostName');
+sysInfo.localHostName = localHostName(1:end-1);
+[~, userShortName] = system('id -un');
+sysInfo.userShortName = userShortName(1:end-1);
 switch (sysInfo.localHostName)
     case 'eagleray'
         % DHB's desktop

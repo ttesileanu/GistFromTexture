@@ -1,0 +1,15 @@
+[
+	{
+		"flavor": "",
+		"hook": "",
+		"importance": "",
+		"localHookTemplate": "Configuration/UPENNNaturalImageProjectLocalHookTemplate.m",
+		"name": "GistFromTexture",
+		"pathPlacement": "none",
+		"subfolder": "",
+		"toolboxRoot": "",
+		"type": "git",
+		"update": "",
+		"url": ""
+	}	
+]

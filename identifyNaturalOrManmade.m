@@ -1,12 +1,10 @@
-% runPCAonUPENNImages
+% identifyNaturalOrManmade
 %
-% Run principal component analysis on the texture statistics from both the
-% UPenn images, comparing natural scenes, taken in Botswana, and humanmade
-% scenes, taken in Philadelphia.
+% Generate a Gaussian mixture distribution and classify a patch
+% as either belonging to a natural scene or a manmade scene. 
 %
 
-%% Clear
-close all; clear;
+function idx = identifyNaturalOrManmade(patchCoords, blockAF, patchSize)
 
 %% Add path to texture analysis functions in separate directory from the TextureAnalysis repo
 % Note: you will need to download this repo. See https://github.com/ttesileanu/TextureAnalysis
@@ -20,10 +18,6 @@ addpath(pathToTextureAnalysisFiles);
 % folder eventually.
 pathToAnnieScripts = fullfile(baseDir, 'purm_scripts');
 addpath(pathToAnnieScripts);
-
-%% Parameters
-blockAF = 8;
-patchSize = 32;
 
 %% Process the image set directories. You can customize this.
 baseDir = fullfile(filesep,'/Volumes', 'Annie');
@@ -78,31 +72,22 @@ end
 
 % Calculate the texture statistics for manmade scene images
 manmadeResults = plotCommands(fileNamesManmade, manmadeDirectory, blockAF, patchSize);
-%naturalResults = plotCommands(fileNamesNatural, naturalDirectory, blockAF, patchSize);
 
-% Compile manmade and natural scene statistics
-allResults = [manmadeResults.ev; naturalResults];
+%% Define a training set of images to generate the Gaussian mixture. We take half the results. 
+trainingSetManmade = manmadeResults.ev(1:floor(size(manmadeResults.ev, 1)/2), :);
+trainingSetNatural = naturalResults(1:(floor(size(naturalResults, 1)/2)), :);
 
-%% Run PCA on the texture statistics
-% blue: manmade scenes, green: natural scenes
+%% Calculate the means 
+meanManmade = mean(trainingSetManmade, 1);
+meanNatural = mean(trainingSetNatural, 1);
+meanBoth = [meanManmade; meanNatural];
 
-% Mean-center the results, find singular value decomposition.
-mu = mean(allResults, 1);
-allResultsCentered = bsxfun(@minus, allResults, mu);
-[svdU, svdS, svdV] = svd(allResultsCentered, 0);
+% Calculate the covariances and assemble into a 3D array
+sigmaBoth = cov(meanManmade);
+sigmaBoth(:, :, 2) = cov(meanNatural);
 
-% Project the data onto the principal components
-allResultsProj = allResultsCentered * svdV;
-
-%% Plot the first two PC's, with the blue color for manmade scenes and green for natural
-colorsForManmade = repmat([0 1 1], size(manmadeResults.ev, 1), 1);
-colorsForNatural = repmat([0 1 0], size(naturalResults, 1), 1);
-allColors = [colorsForManmade; colorsForNatural];
-
-figure;
-scatter(allResultsProj(:, 1), allResultsProj(:, 2), [], allColors, ...
-    'filled', 'MarkerFaceAlpha', .4, 'MarkerEdgeAlpha', .4);
-xlabel('PC #1');
-ylabel('PC #2');
-legend('manmade', 'natural');
+% The gmdistribution function returns an object that you can use to
+% classify patches.
+gmix = gmdistribution(meanBoth, sigmaBoth);
+idx = gmix.cluster(patchCoords);  % returns 1 or 2, identifying either one or the other of the Gaussians
 

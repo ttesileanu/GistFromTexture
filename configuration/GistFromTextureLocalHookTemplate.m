@@ -14,6 +14,8 @@ function GistFromTextureLocalHook
 % computer.
 
 % 6/24/17  dhb      Created.  Removed reliance on BLTB GetComputerInfo.
+% 7/6/17 as Updated. baseDir points to GistFromTexture project. Added
+% preferences. 
 
 % Define project
 theProject = 'GistFromTexture';
@@ -35,17 +37,17 @@ sysInfo.userShortName = userShortName(1:end-1);
 switch (sysInfo.localHostName)
     case 'eagleray'
         % DHB's desktop
-        baseDir = fullfile(filesep,'Volumes','Users1','DropboxLab/UPENNNaturalImageProject');
+        baseDir = fullfile(filesep,'Volumes','Users1','DropboxLab/GistFromTexture');
     case 'Annies-MacBook-Pro-2'
         % Annie's laptop
-        baseDir = fullfile(filesep,'/Volumes','Annie','UPENNNaturalImageProject');
+        baseDir = fullfile(filesep,'/Volumes','Annie','GistFromTexture');
     otherwise
         % Some unspecified machine, try user specific customization
         switch(sysInfo.userShortName)
             % Could put user specific things in, but at the moment generic
             % is good enough.
             otherwise
-                baseDir = ['/Users/' sysInfo.userShortName 'DropboxLab//UPENNNaturalImageProject'];
+                baseDir = ['/Users/' sysInfo.userShortName 'DropboxLab/GistFromTexture'];
         end
 end
 
@@ -57,5 +59,10 @@ setpref(theProject,'botswanaDatabase',fullfile(baseDir,'BotswanaImagesOrig'));
 % Philly database
 setpref(theProject,'phillyDatabase',fullfile(baseDir,'PhillyImages'));
 
+% Natural scene images
+setpref(theProject, 'naturalScene', fullfile(baseDir, 'natural'));
+
+% Manmade scene images
+setpref(theProject, 'manmadeScene', fullfile(baseDir, 'manmade'));
 
 

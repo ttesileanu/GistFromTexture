@@ -4,31 +4,36 @@
 % UPenn images, comparing natural scenes, taken in Botswana, and humanmade
 % scenes, taken in Philadelphia.
 %
+% Typical parameters:
+% blockAF = 1; patchSize = 256
+% blockAF = 2; patchSize = 128
+% blockAF = 4; patchSize = 64
+% blockAF = 8; patchSize = 32
+%
 
 %% Clear
 close all; clear;
 
-%% Add path to texture analysis functions in separate directory from the TextureAnalysis repo
-% Note: you will need to download this repo. See https://github.com/ttesileanu/TextureAnalysis
-baseDir = fullfile('/Users', 'anniesu', 'Documents', 'MATLAB');
-
-% You may need to edit this path to fit with your matlab file configuration
-pathToTextureAnalysisFiles = fullfile(baseDir, 'projects', 'Analysis', 'TextureAnalysis');
-addpath(pathToTextureAnalysisFiles);
-
-% Add path to Annie's scripts. Note: add this into the GistFromTexture
-% folder eventually.
-pathToAnnieScripts = fullfile(baseDir, 'purm_scripts');
-addpath(pathToAnnieScripts);
-
 %% Parameters
-blockAF = 8;
-patchSize = 32;
+blockAF = 1;
+patchSize = 256;
 
-%% Process the image set directories. You can customize this.
+%% Add path to texture analysis functions in the TextureAnalysis directory
+% Note: you will need to download the scripts. See https://github.com/ttesileanu/TextureAnalysis
+% You may need to edit the baseDir to fit with your matlab file configuration
+baseDir = fullfile('/Users', 'anniesu', 'Documents', 'MATLAB');
+pathToTextureAnalysisFiles = fullfile(baseDir, 'projects', 'Analysis', 'TextureAnalysis');
+addpath(fullfile(pathToTextureAnalysisFiles, 'preprocess'));
+addpath(genpath(pathToTextureAnalysisFiles));
+
+% Add path to all subfolders in GistFromTexture project
+pathToThisProj = pwd;
+addpath(genpath(pathToThisProj));
+
+%% Fetch the image set directories. You can customize this.
 baseDir = fullfile(filesep,'/Volumes', 'Annie');
-manmadeDirectory = fullfile(baseDir, 'manmade');
-naturalDirectory = fullfile(baseDir, 'natural');
+manmadeDirectory = getpref('GistFromTexture', 'manmadeScene');
+naturalDirectory = getpref('GistFromTexture', 'naturalScene');
 
 %% List file names in cell. Note we only want the JPG's
 fileNamesManmade = direcNames(manmadeDirectory);
@@ -67,7 +72,7 @@ for ii = 1:size(subDirectoryNamesNatural, 2)
         end
         naturalSubDirFileNames(cellfun(@(naturalSubDirFileNames) isempty(naturalSubDirFileNames), naturalSubDirFileNames)) = [];
         
-        naturalPortionOfResults = plotCommands(naturalSubDirFileNames, naturalSubDir, blockAF, patchSize);
+        [naturalPortionOfResults, filterForNaturalScenes] = plotCommands(naturalSubDirFileNames, naturalSubDir, blockAF, patchSize);
         naturalStructs = [naturalStructs; naturalPortionOfResults];
     end
 end
@@ -77,8 +82,7 @@ for ii = 1:size(naturalStructs, 1)
 end
 
 % Calculate the texture statistics for manmade scene images
-manmadeResults = plotCommands(fileNamesManmade, manmadeDirectory, blockAF, patchSize);
-%naturalResults = plotCommands(fileNamesNatural, naturalDirectory, blockAF, patchSize);
+[manmadeResults, filterForManmadeScenes] = plotCommands(fileNamesManmade, manmadeDirectory, blockAF, patchSize);
 
 % Compile manmade and natural scene statistics
 allResults = [manmadeResults.ev; naturalResults];
@@ -104,5 +108,7 @@ scatter(allResultsProj(:, 1), allResultsProj(:, 2), [], allColors, ...
     'filled', 'MarkerFaceAlpha', .4, 'MarkerEdgeAlpha', .4);
 xlabel('PC #1');
 ylabel('PC #2');
-legend('manmade', 'natural');
+legend({'manmade is blue', 'natural is green'}); % legend doesn't label properly
+titleLabel = strcat('block AF=', int2str(blockAF), ', patch size=', int2str(patchSize));
+title(titleLabel);
 

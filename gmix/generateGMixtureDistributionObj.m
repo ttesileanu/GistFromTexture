@@ -59,11 +59,11 @@ end
 %% Calculate the means 
 meanManmade = mean(trainingSetForManmade, 1);
 meanNatural = mean(trainingSetForNatural, 1);
-meanBoth = [meanManmade; meanNatural];
+meanBoth = [meanNatural; meanManmade];
 
 % Calculate the covariances and assemble into a 3D array
-sigmaBoth = cov(trainingSetForManmade);
-sigmaBoth(:, :, 2) = cov(trainingSetForNatural);
+sigmaBoth = cov(trainingSetForNatural);
+sigmaBoth(:, :, 2) = cov(trainingSetForManmade);
 
 % The gmdistribution function returns an object that you can use to
 % classify patches.

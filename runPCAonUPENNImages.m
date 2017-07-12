@@ -16,7 +16,7 @@ close all; clear;
 
 %% Parameters
 blockAF = 1;
-patchSize = 256;
+patchSize = 64;
 
 %% Add path to texture analysis functions in the TextureAnalysis directory
 % Note: you will need to download the scripts. See https://github.com/ttesileanu/TextureAnalysis

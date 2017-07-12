@@ -41,8 +41,11 @@ switch blockAF
         if (patchSize == 256)
             load 'trainingSetForManmade1x256.mat';
             load 'trainingSetForNatural1x256.mat';
-        else 
-            % generate training set...
+        elseif (patchSize == 64)
+            load 'trainingSetForManmade1x64.mat';
+            load 'trainingSetForNatural1x64.mat'; 
+        else
+            % generate training set...            
         end
     case 2
         if (patchSize == 128)
@@ -59,11 +62,11 @@ end
 %% Calculate the means 
 meanManmade = mean(trainingSetForManmade, 1);
 meanNatural = mean(trainingSetForNatural, 1);
-meanBoth = [meanNatural; meanManmade];
+meanBoth = [meanManmade; meanNatural];
 
 % Calculate the covariances and assemble into a 3D array
-sigmaBoth = cov(trainingSetForNatural);
-sigmaBoth(:, :, 2) = cov(trainingSetForManmade);
+sigmaBoth = cov(trainingSetForManmade);
+sigmaBoth(:, :, 2) = cov(trainingSetForNatural);
 
 % The gmdistribution function returns an object that you can use to
 % classify patches.

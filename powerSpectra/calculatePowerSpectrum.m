@@ -24,7 +24,8 @@ for ii = 1:size(powerSpectraNatural, 2)
     imageGreyscale = rgb2gray(imageDouble);
     
     % apply filter and quantization
-    finalImage = preprocessImage(imageGreyscale, blockAF, Ffilter, numLevels, []);
+    finalImage = preprocessImage(imageGreyscale, blockAF, Ffilter, numLevels, patchSize, ...
+        'quantType', 'perpixel', 'filterType', 'full');
     res = analyzePatches(finalImage, numLevels, patchSize, [], 'overlapping', overlapStep);
     
     % find first occurrence of column 2, so we know how many rows are
@@ -69,7 +70,8 @@ for ii = 1:size(powerSpectraManmade, 2)
     imageGreyscale = rgb2gray(imageDouble);
     
     % apply filter and quantization
-    finalImage = preprocessImage(imageGreyscale, blockAF, Ffilter, numLevels, []);
+    finalImage = preprocessImage(imageGreyscale, blockAF, Ffilter, numLevels, patchSize, ...
+        'quantType', 'perpixel', 'filterType', 'full');
     res = analyzePatches(finalImage, numLevels, patchSize, [], 'overlapping', overlapStep);
     
     % find first occurrence of a patch at column 2, so we know how many rows are

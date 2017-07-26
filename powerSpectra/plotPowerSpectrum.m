@@ -19,7 +19,7 @@ for ii = 1:10
     h = subplot(2, 10, ii); 
     contour(fftshift(avgPowerSpectraNatural{ii, 1})); 
     axis equal;
-    xlim([88 98]);
+    xlim([80 100]);
     ylim([50 70]);
     title(textureNames{1, ii});
 end
@@ -29,9 +29,10 @@ for ii = 1:10
     h = subplot(2, 10, ii + 10); 
     contour(fftshift(avgPowerSpectraManmade{ii, 1})); 
     axis equal;
-    xlim([88 98]);
+    xlim([80 100]);
     ylim([50 70]);
     title(textureNames{1, ii});
+    
 end
 
 % remove excess margins from figures
